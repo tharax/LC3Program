@@ -81,16 +81,16 @@
 0000 0000 0000 1101	;<newline>
 0000 0000 0000 0000
 
-					;----------------------------------------PROMPT
 1110 000 00110 1000		;LEA R0 104, to the integer prompt text block.
-1111 0000 0010 0100		;TRAP x24 (PUTSP) - prints the integer prompt text block.
-1110 000 01111 1111		;LEA R0 x313d
-0001 000 000 1 00010	;add 2 to r0
+1111 0000 0010 0100		;TRAP x24 prints the integer prompt text block.
 
-1110 110 1100 00100	;Load into r6 an address 128 above this line, for storing the input details
-0001 001 001 1 00010	;add 2 to counter in r1
-1111 0000 0010 0000	;TRAP x20 GETC - takes one character from the keyboard
-1111 0000 0010 0001	;TRAP x21 OUT - write character in R0[7:0] to console display
+1110 000 01111 1111		;LEA R0 x313d
+0001 000 000 1 00010	;ADD 2 to R0;
+
+1110 110 1100 00100		;LEA R6 an address 128 above this line, for storing the input details
+0001 001 001 1 00010	;add 2 to counter in R1
+1111 0000 0010 0000		;TRAP x20 GETC - takes one character from the keyboard
+1111 0000 0010 0001		;TRAP x21 OUT - write character in R0[7:0] to console display
 
 0111 000 110 000000		;store the character at r0 into r6[address]
 0001 000 000 1 10111	;subtract 9 from r0 (check if it is a whitespace - tab)
