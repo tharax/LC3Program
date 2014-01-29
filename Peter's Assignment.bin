@@ -1,27 +1,27 @@
 ;PETER ROSSER
 ;ID 3740602
 ;UPI pros028
-;A SIMPLE PROGRAM TO CALCULATE 2^n WHERE n IS BETWEEN 1-50
+;A simple program that calculates 2^N where N is between 1-50
 
 
 0011 0000 0000 0000	;start at x3000
 
-0101 000 000 1 00000	;these 8 lines clear all  8 registers
-0101 001 001 1 00000	;so that program doesnt carry over any addition errors
-0101 010 010 1 00000	;when prompts get repeated
+0101 000 000 1 00000	;Clear all 8 registers so that repeated prompts don't carry over errors.
+0101 001 001 1 00000
+0101 010 010 1 00000
 0101 011 011 1 00000
 0101 100 100 1 00000
 0101 101 101 1 00000
 0101 110 110 1 00000
 0101 111 111 1 00000
 
-0000 111 00001 0010	;branch past the bad input text block below.
+0000 111 00001 0010	;Unconditionally branch 18 lines ahead.
 
-			;bad input, please try again.
-1110 000 00000 0010	;LEA R0, to the bad input text block.
-1111 0000 0010 0100	;TRAP x24 (PUTSP) - prints out the bad input text block.
-0000 111 00001 0100	;branch down 20 (hopefully should end up at PROMPT again.)
+1110 000 00000 0010	;LEA R0 2, to the bad input text block.
+1111 0000 0010 0100	;TRAP x24 prints out the bad input text block.
+0000 111 00001 0100	;Unconditionally branch 20 lines ahead.
 
+					;Bad input, please try again.
 0110 0001 0100 0010	;Ba
 0010 0000 0110 0100	;d<space>
 0110 1110 0110 1001	;in
@@ -29,7 +29,7 @@
 0010 1100 0111 0100	;t<,>
 0111 0000 0010 0000	;<space>p
 0110 0101 0110 1100	;le
-0111 0011 0110 0001 	;as
+0111 0011 0110 0001	;as
 0010 0000 0110 0101	;e<space>
 0111 0010 0111 0100	;tr
 0010 0000 0111 1001	;y<space>
@@ -39,24 +39,22 @@
 0000 0000 0000 1010	;newline
 0000 0000 0000 0000
 
+1110 000 00101 1001	;LEA R0 89, to the block about student details.
+1111 0000 0010 0100	;TRAP x24 prints out the student details block.
 
-1110 000 00101 1001	;LEA R0, to the block about student details.
-1111 0000 0010 0100	;TRAP x24 (PUTSP) - prints out the student info block of text
+1110 000 00000 0010	;LEA R0 2, to the quit text block.
+1111 0000 0010 0100	;TRAP x24 prints out the quit text block.
+0000 111 00001 1010	;Unconditionally branch 26 lines ahead.
 
-			;message about how to quit the program
-
-1110 000 00000 0010	;LEA 2 down from this line
-1111 0000 0010 0100	;TRAP x24 (PUTSP) - prints out the quit text block
-0000 111 00001 1010	;after trap, branch forward 26 lines
-
+					;To quit at any time, enter " 51 " at the prompt.
 0110 1111 0101 0100	;To
 0111 0001 0010 0000	;<space>q
-0110 1001 0111 0101 	;ui
+0110 1001 0111 0101	;ui
 0010 0000 0111 0100	;t<space>
 0111 0100 0110 0001	;at
 0110 0001 0010 0000	;<space>a
 0111 1001 0110 1110	;ny
-0111 0100 0010 0000	;<space>t	
+0111 0100 0010 0000	;<space>t
 0110 1101 0110 1001	;im
 0010 1100 0110 0101	;e,
 0110 0101 0010 0000	;<space>e
@@ -65,7 +63,7 @@
 0010 0010 0010 0000	;<space>"
 0011 0101 0010 0000	;<space>5
 0010 0000 0011 0001	;1<space>
-0010 0000 0010 0010 	;"<space>
+0010 0000 0010 0010	;"<space>
 0111 0100 0110 0001	;at
 0111 0100 0010 0000	;<space>t
 0110 0101 0110 1000	;he
@@ -74,44 +72,42 @@
 0111 0000 0110 1101	;mp
 0010 1110 0111 0100	;t.
 0000 0000 0000 1101	;<newline>
-0000 0000 0000 0000	;<------------ end of block
+0000 0000 0000 0000
 
-
-
-			;----------------------------------------PROMPT
-1110 000 00110 1000	;LEA R0, x48 down from this line
+					;----------------------------------------PROMPT
+1110 000 00110 1000	;LEA R0 104, x48 down from this line
 1111 0000 0010 0100	;TRAP x24 (PUTSP) - prints the prompt for "n"
 1110 000 01111 1111	;LEA R0, to x3100
 0001 000 000 1 00010	;add 1 to r0
 
-1110 110 1100 00100	;Load into r6 an address 128 above this line, for storing the input details                                   
+1110 110 1100 00100	;Load into r6 an address 128 above this line, for storing the input details
 0001 001 001 1 00010	;add 2 to counter in r1
 1111 0000 0010 0000	;TRAP x20 GETC - takes one character from the keyboard
 1111 0000 0010 0001	;TRAP x21 OUT - write character in R0[7:0] to console display
 
-0111 000 110 000000	;store the character at r0 into r6[address]
+0111 000 110 000000		;store the character at r0 into r6[address]
 0001 000 000 1 10111	;subtract 9 from r0 (check if it is a whitespace - tab)
-0000 010 0000 00001	;branch to end (its a tab)
+0000 010 0000 00001		;branch to end (its a tab)
 0001 000 000 1 11111	;subtract 10 from r0 (check if it is a whitespace - line feed)
-0000 010 0000 00010	;branch to end (its a linefeed)
+0000 010 0000 00010		;branch to end (its a linefeed)
 0001 000 000 1 10110	;subtract 10 from r0
 0001 000 000 1 10100	;subtract 12 from r0 (check if it is a whitespace - space)
-0000 010 0000 00011	;branch to end (its a space)
+0000 010 0000 00011		;branch to end (its a space)
 0001 010 010 1 00001	;add 1 to counter in r2 (input length counter)
 0001 110 110 1 00001	;add 1 to r6[address] counter
-0000 111 1111 10011	;branch NZP back up to line 13 above this
+0000 111 1111 10011		;branch NZP back up to line 13 above this
 ;1111 0000 0010 0101	;halt <-------------- SHOULD BE BRANCH TO "BAD INPUT"---------CHANGE ME
 
-			;check to see if the input is too long or no input.
+						;check to see if the input is too long or no input.
 0101 011 011 1 00000	;wipe register 3
 0001 010 010 1 11110	;subtract 2 from r2 (input length counter)
-0000 001 1101 11000	;branch back 47 to BAD INPUT				;x304F
+0000 001 1101 11000		;branch back 47 to BAD INPUT				;x304F
 0001 010 010 1 00010	;add 2 back to the r2 counter.
-0000 010 1111 11101	;branch back 2 and hitch a ride to BAD INPUT
+0000 010 1111 11101		;branch back 2 and hitch a ride to BAD INPUT
 0001 010 010 1 11111	;check to see if the input is 1 (by subtracting one and
-			; branching if it is zero)
-0000 010 0000 00001	;branch to loading r3 with x30
-0000 001 0000 00100	;if the answer is still positive, branch down two
+						; branching if it is zero)
+0000 010 0000 00001		;branch to loading r3 with x30
+0000 001 0000 00100		;if the answer is still positive, branch down two
 0001 011 011 1 01111	; 
 0001 011 011 1 01111	;
 0001 011 011 1 01111	;
@@ -120,118 +116,125 @@
 
 0101 100 100 1 00000	;wipe register 4
 
-1110 110 1011 00110	;Load into r6 the start of the stack address
+1110 110 1011 00110		;Load into r6 the start of the stack address
 0001 110 110 1 00001	;add 1 to r6
-0110 000 110 000000	;load r6[contents] into r0
+0110 000 110 000000		;load r6[contents] into r0
 0101 111 111 1 00000	;wipe r7
-0111 111 110 000000	;store r7 in r6 address (to wipe the stack for repeat uses)
+0111 111 110 000000		;store r7 in r6 address (to wipe the stack for repeat uses)
 
 0001 010 010 1 11111	;decrease counter in r2 by 1
-0000 100 0000 00001	;branch Nzp <-this line should never be run
-0000 010 0000 00001	;branch nZp forward 2 if it's zero
+0000 100 0000 00001		;branch Nzp <-this line should never be run
+0000 010 0000 00001		;branch nZp forward 2 if it's zero
 0001 011 000 1 00000	;add to r3 the number in r0
 0001 100 000 1 00000	;add to r4 the number in r0
 0001 001 001 1 11111	;decrease counter in r1 by 1
-0000 001 11111 0101	;branch nzP back 2 if the result is still positive
+0000 001 11111 0101		;branch nzP back 2 if the result is still positive
 0001 101 100 1 00000	;add to r5 what is in r4
 0001 101 101 1 10000	;subtract 16 from r5
 0001 101 101 1 10000	;subtract 16 from r5
 0001 101 101 1 10000	;subtract 16 from r5
 0001 101 101 1 11111	;subtract 1 from r5
-0000 101 0000 00111	;if result is negative or positive, branch past this "51" check
+0000 101 0000 00111		;if result is negative or positive, branch past this "51" check
 0001 101 011 1 00000	;add to r5 what is in r3
 0001 101 101 1 10000	;subtract 16 from r5
 0001 101 101 1 10000	;subtract 16 from r5
 0001 101 101 1 10000	;subtract 16 from r5
 0001 101 101 1 11011	;subtract 5 from r5
-0000 101 0000 00001	;if result is negative or positive, branch past this "51" check
-1111 0000 0010 0101	;halt
+0000 101 0000 00001		;if result is negative or positive, branch past this "51" check
+1111 0000 0010 0101		;halt
 
 0000 111 00100 0100	;branch NZP to the end of the two text blocks below.
 
-0100 0001 0100 1110	;NA<-------------Start of "Student Details"
+					;NAME: Peter Rosser
+0100 0001 0100 1110	;NA
 0100 0101 0100 1101	;ME
 0010 0000 0011 1010	;:<space>
-0110 0101 0101 0000 	;Pe
+0110 0101 0101 00000;Pe
 0110 0101 0111 0100	;te
-0010 0000 0111 0010 	;r<space>
-0110 1111 0101 0010 	;Ro
-0111 0011 0111 0011 	;ss
+0010 0000 0111 0010	;r<space>
+0110 1111 0101 0010	;Ro
+0111 0011 0111 0011	;ss
 0111 0010 0110 0101	;er
 
+					;UPI :pros028
 0101 0101 0000 1101	;<newline>U
 0100 1001 0101 0000	;PI
-0011 1010 0010 0000 	;<space>:
-0111 0000 0010 0000 	;<space>p
+0011 1010 0010 0000	;<space>:
+0111 0000 0010 0000	;<space>p
 0110 1111 0111 0010	;ro
-0011 0000 0111 0011 	;s0
+0011 0000 0111 0011	;s0
 0011 1000 0011 0010	;28
 
+					;AUID: 3740602
 0100 0001 0000 1101	;<newline>A
-0100 1001 0101 0101 	;UI
-0011 1010 0100 0100 	;D:
+0100 1001 0101 0101	;UI
+0011 1010 0100 0100	;D:
 0010 0000 0000 0000	;<space><null>
 0011 0111 0011 0011	;37
 0011 0000 0011 0100	;40
 0011 0000 0011 0110	;60
 0000 1101 0011 0010	;2<newline>
 
+					;Compsci 210 2010 Semester 1
 0110 1111 0100 0011	;Co
-0111 0000 0110 1101 	;mp
+0111 0000 0110 1101	;mp
 0110 0011 0111 0011	;sc
 0010 0000 0110 1001	;i<space>
 0011 0001 0011 0010	;21
-0010 0000 0011 0000 	;0<space>
-0011 0000 0011 0010 	;20
-0011 0000 0011 0001 	;10
-0101 0011 0010 0000 	;<space>S
-0110 1101 0110 0101 	;em
-0111 0011 0110 0101 	;es
-0110 0101 0111 0100  	;te
-0010 0000 0111 0010 	;r<space>
-0000 1101 0011 0001  	;1<newline>
+0010 0000 0011 0000	;0<space>
+0011 0000 0011 0010	;20
+0011 0000 0011 0001	;10
+0101 0011 0010 0000	;<space>S
+0110 1101 0110 0101	;em
+0111 0011 0110 0101	;es
+0110 0101 0111 0100	;te
+0010 0000 0111 0010	;r<space>
+0000 1101 0011 0001	;1<newline>
 
+					;Assignment 2
 0111 0011 0100 0001	;As
 0110 1001 0111 0011	;si
-0110 1110 0110 0111 	;gn
-0110 0101 0110 1101 	;me
+0110 1110 0110 0111	;gn
+0110 0101 0110 1101	;me
 0111 0100 0110 1110	;nt
 0011 0010 0010 0000	;<space>2
 0000 0000 0000 1010	;<newline><null>
-0000 0000 0000 0000	;<---------------end of "Student Details"
+0000 0000 0000 0000	;
 
-0110 1100 0101 0000	;Pl<-------------Start of "Prompt"
-0110 0001 0110 0101 	;ea
+					;Please enter an integer between 1 and 50: 
+0110 1100 0101 0000	;Pl
+0110 0001 0110 0101	;ea
 0110 0101 0111 0011	;se
 0110 0101 0010 0000	;<space>e
-0111 0100 0110 1110 	;nt
+0111 0100 0110 1110	;nt
 0111 0010 0110 0101	;er
 0110 0001 0010 0000	;<space>a
 0010 0000 0110 1110	;n<space>
-0110 1110 0110 1001 	;in
+0110 1110 0110 1001	;in
 0110 0101 0111 0100	;te
 0110 0101 0110 0111	;ge
 0010 0000 0111 0010	;r<space>
 0110 0101 0110 0010	;be
-0111 0111 0111 0100 	;tw
+0111 0111 0111 0100	;tw
 0110 0101 0110 0101	;ee
-0010 0000 0110 1110 	;n<space>
+0010 0000 0110 1110	;n<space>
 0010 0000 0011 0001	;1<space>
-0110 1110 0110 0001 	;an
+0110 1110 0110 0001	;an
 0010 0000 0110 0100	;d<space>
-0011 0000 0011 0101 	;50
+0011 0000 0011 0101	;50
 0010 0000 0011 1010	;:<space>
-0000 0000 0000 0000	;<---------------end of "Prompt"
+0000 0000 0000 0000	;
 
 1110 000 00000 0010	;LEA 2 down from this line
 1111 0000 0010 0100	;TRAP x24 (PUTSP) - prints out the Result part a text block
 0000 111 00000 0110	;after trap, branch forward 6 lines
 
+					;Power (2,
 0110 1111 0101 0000	;Po<-------------Start of "Result(a)"
 0110 0101 0111 0111	;we
 0010 0000 0111 0010	;r<space>
 0011 0010 0010 1000	;(2
-0000 0000 0010 1100 	;,<null>
+0000 0000 0010 1100	;,<null>
 0000 0000 0000 0000	;<---------------end of "Result(a)"
 
 0101 000 000 1 00000	;clear R0 (R0 AND 0)
@@ -421,6 +424,6 @@
 			;answer part b of assignment
 
 
-1111 0000 0010 0101	;TRAP x25 (HALT) - halt the program 
+1111 0000 0010 0101	;TRAP x25 (HALT) - halt the program
 
 
