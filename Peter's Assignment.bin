@@ -4,6 +4,13 @@
 ;A simple program that calculates 2^N where N is between 1-50
 
 
+;TODO
+	;so that prompt repeats after giving an answer
+	;error if input is bad
+	;allow for single digit inputs
+
+
+
 0011 0000 0000 0000	;start at x3000
 
 0101 000 000 1 00000	;Clear all 8 registers so that repeated prompts don't carry over errors.
@@ -39,7 +46,7 @@
 0000 0000 0000 1010	;newline
 0000 0000 0000 0000
 
-1110 000 00101 1001	;LEA R0 89, to the block about student details.
+1110 000 00101 1001	;LEA R0 89, to the student details block.
 1111 0000 0010 0100	;TRAP x24 prints out the student details block.
 
 1110 000 00000 0010	;LEA R0 2, to the quit text block.
@@ -75,10 +82,10 @@
 0000 0000 0000 0000
 
 					;----------------------------------------PROMPT
-1110 000 00110 1000	;LEA R0 104, x48 down from this line
-1111 0000 0010 0100	;TRAP x24 (PUTSP) - prints the prompt for "n"
-1110 000 01111 1111	;LEA R0, to x3100
-0001 000 000 1 00010	;add 1 to r0
+1110 000 00110 1000		;LEA R0 104, to the integer prompt text block.
+1111 0000 0010 0100		;TRAP x24 (PUTSP) - prints the integer prompt text block.
+1110 000 01111 1111		;LEA R0 x313d
+0001 000 000 1 00010	;add 2 to r0
 
 1110 110 1100 00100	;Load into r6 an address 128 above this line, for storing the input details
 0001 001 001 1 00010	;add 2 to counter in r1
@@ -249,7 +256,7 @@
 1111 0000 0010 0100	;TRAP x24 (PUTSP) - prints out the Result part b text block
 0000 111 00000 0011	;after trap, branch forward 3 lines
 
-0010 0000 0010 1001 	;)<space><-------Start of "Result(b)"
+0010 0000 0010 1001	;)<space><-------Start of "Result(b)"
 0010 0000 0011 1101	;=<space><-------end of "Result(b)"
 0000 0000 0000 0000	;<---------------end of "Result(b)"
 		
@@ -409,21 +416,4 @@
 
 1100 000 000 000000	;JMP to r0[address]
 
-
-;TO CODE LIST			
-			;so that prompt repeats after giving an answer
-
-			;error if input is bad
-
-			;allow for single digit inputs
-
-
-
-
-
-			;answer part b of assignment
-
-
 1111 0000 0010 0101	;TRAP x25 (HALT) - halt the program
-
-
