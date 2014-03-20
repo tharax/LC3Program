@@ -1,13 +1,137 @@
-;PETER ROSSER
-;ID 3740602
-;UPI pros028
-;A simple program that calculates 2^N where N is between 1-50
+      ;wipe registers and number stuff
+      ;Write Message
+      ;Take input
+      ;Sanitize - If correct move on, otherwise print error and back to start
+      ;if 51, end program
+      ;calculate
+      ;print Message
+      ;print numbers after each print, set to 0
+      ;back to start
+
+0011 0000 0000 0000   ;Start at x3000
+
+0101 000 000 1 00000  ;Clear all 8 registers so that repeated prompts don't carry over errors.
+0101 001 001 1 00000
+0101 010 010 1 00000
+0101 011 011 1 00000
+0101 100 100 1 00000
+0101 101 101 1 00000
+0101 110 110 1 00000
+0101 111 111 1 00000
+
+                      ;Take input, and store in R0
+1111 0000 0010 0000   ;TRAP x20 GETC takes one character from the keyboard
+1111 0000 0010 0001   ;TRAP x21 OUT write character in R0[7:0] to console display
+0001 000 000 1 10000  ;R0 = R0 - 16
+0001 000 000 1 10000  ;R0 = R0 - 16
+0001 000 000 1 10000  ;R0 = R0 - 16
+0001 001 001 000 000  ;R1 = R1 + R0
+0001 001 001 000 001  ;2 * R1
+0001 001 001 000 001  ;2 * R1
+0001 001 001 000 000  ;R1 = R1 + R0
+0001 001 001 000 001  ;2 * R1
+1111 0000 0010 0000   ;TRAP x20 GETC takes one character from the keyboard
+1111 0000 0010 0001   ;TRAP x21 OUT write character in R0[7:0] to console display
+0001 000 000 1 10000  ;R0 = R0 - 16
+0001 000 000 1 10000  ;R0 = R0 - 16
+0001 000 000 1 10000  ;R0 = R0 - 16
+0001 000 001 000 000  ;R0 = R1 + R0
+0101 001 001 1 00000  ;R1 = 0
 
 
-;TODO
-      ;so that prompt repeats after giving an answer
-      ;error if input is bad
-      ;allow for single digit inputs
+0001 000 000 1 11111  ;R0 = R0 - 1
+0000 100 1111 00101   ;Branch ahead of Stack if R0 < 0 (Counter is exhausted)
+1110 001 0000 01101   ;R1 = Address of Stack pointer
+0110 010 001 000000   ;R2 = Number stored in Stack pointer
+0001 010 010 000 010  ;2 * R2
+0001 010 010 000 011  ;R2 = R2 + R3
+0000 010 1111 11001   ;BRz Branch back to counter
+0001 011 010 1 00000  ;R3 = R2
+0001 011 011 1 10110  ;R3 - 10
+0000 100 0000 00001   ;Branch ahead 1 lines if R3 < 0
+0001 010 010 1 10110  ;R2 - 10
+0000 011 0000 00001   ;Branch ahead 1 lines if R3 >= 0
+0101 011 011 1 00000  ;R3 = 0
+0111 010 001 000000   ;Store R2 in R1 Address
+0001 001 001 1 00001  ;R1 = R1 + 1
+0000 111 1111 10010   ;BRnzp Branch back to change counter
+
+0000000000000001        ;This is the stack for counting numbers
+0000000000000000        ;Starts at 1 because (2^n, n=0) = 1
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ;if int @ stack pos = 0 and r3 = 1 then int @stack pos = 1, and r3 =0, and bump top of stack pointer to this point
+      ;if int @ stack pos = 0 and r3 = 0 and r0 = 0 then break loop
+      ;loop back to start
+
+0101 001 001 1 00000    ;clear register 1 (used for current number)
+0101 010 010 1 00000    ;clear register 2 (used for overflow)
+                  ;      register 3 has the (n) counter for 2^(n)
+0101 100 100 1 00000    ;clear register 4 (used for counting how far through stack we are)
+0101 101 101 1 00000    ;clear register 5 (used for stack pointer)
+
+
+0000 110 0000 10001     ;if r3 is negative or zero, branch ahead to end of this calculator
+;1110 101 0110 00000     ;LEA load address at start of stack from here into r5
+0001 100 100 1 10000    ;set counter in r4 at -16
+;0110 001 101 000000    ;load values from r5[address] into r1
+;0001 001 001 000 001    ;double the value in r1, put in r1
+0001 001 001 000 010    ;add the value in r2(overflow, if it exists), to r1
+0101 010 010 1 00000    ;clear r2
+;0001 001 001 1 10110    ;subtract ten from r1(for overflow test), put result in r1
+0000 011 0000 00001     ;if its Z or P, branch 1 ahead
+0000 100 0000 00010     ;if its N, branch 2 ahead
+0001 010 010 1 00001    ;the result is over ten, add 1 to r2
+0000 111 0000 00001     ;BR NZP 1 ahead
+0001 001 001 1 01010    ;add ten back to r1, put result in r1
+0111 001 101 000000     ;store the (single)value that is in r1 in the address
+0001 101 101 1 11111    ;subtract 1 from counter in r5
+0001 100 100 1 00001    ;add 1 to counter in r4 
+0000 100 1111 10010     ;br N (if the r4 counter is still negative, jump up 13 lines)
+0000 011 1111 01100     ;br ZP (if the code to repeat 16 times is done, jump up 17 lines)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -81,10 +205,10 @@
 0000 0000 0000 1101     ;<newline>
 0000 0000 0000 0000
 
-1110 000 00110 1000           ;LEA R0 104, to the integer prompt text block.
-1111 0000 0010 0100           ;TRAP x24 prints the integer prompt text block.
+1110 000 00110 1000     ;LEA R0 104, to the integer prompt text block.
+1111 0000 0010 0100     ;TRAP x24 prints the integer prompt text block.
 
-1110 000 01111 1111           ;LEA R0 x313d
+1110 000 01111 1111     ;LEA R0 x313d
 0001 000 000 1 00010    ;ADD 2 to R0;
 
 1110 110 1100 00100           ;LEA R6 an address 128 above this line, for storing the input details
