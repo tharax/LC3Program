@@ -56,7 +56,7 @@
 0101 011 011 1 00000  ;R3 = 0
 0111 010 001 000000   ;Store R2 in R1 Address
 0001 001 001 1 00001  ;R1 = R1 + 1
-0000 111 1111 10001   ;Always Branch back to change counter (Start of block)
+0000 111 1111 10001   ;Always branch back to start of this block
 
 0000000000000001      ;This is the stack for counting numbers
 0000000000000000      ;Starts at 1 because (2^n, n=0) = 1
@@ -74,6 +74,29 @@
 0000000000000000
 0000000000000000
 0000000000000000
+
+
+                      ;Prints out the stack
+1110 011 1111 11110   ;R3 = Bottom of stack
+0110 010 011 000000   ;R2 = Number stored in Stack pointer
+0101 000 000 1 00000  ;R0 = 0
+0001 000 010 1 00000  ;R0 = R2
+0001 000 000 1 01111  ;R0 = R0 + 15
+0001 000 000 1 01111  ;R0 = R0 + 15
+0001 000 000 1 01111  ;R0 = R0 + 15
+0001 000 000 1 00011  ;R0 = R0 + 3
+1111 0000 0010 0001   ;TRAP x21 OUT write character in R0[7:0] to console display
+0001 011 011 1 11111  ;R3 - 1
+0000 111 1111 10110   ;Always branch back to start of this block
+
+
+
+
+
+
+
+
+
 
 
 
