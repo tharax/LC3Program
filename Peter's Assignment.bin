@@ -15,7 +15,6 @@
 0101 110 110 1 00000
 0101 111 111 1 00000
 
-
 0001 010 010 1 00011  ;R2 = 3
 1110 001 00000 0110   ;LEA R1 3 below this line
 0110 000 001 000000   ;R0 = Character stored in R1
@@ -88,11 +87,18 @@
 0000000000000000
 0000000000000000
 
-1110 000 00000 0010   ;LEA 2 below this line
-1111 0000 0010 0100   ;TRAP x24 PUTSP prints out this text block
-0000 111 00000 0010   ;After printing this text, branch forward 2 lines
-0011 1101 0010 0000   ;<space>=
-0000 0000 0000 0000
+0101 010 010 1 00000  ;R2 = 0
+0001 010 010 1 00001  ;R2 = 1
+1110 001 00000 0110   ;LEA R1 3 below this line
+0110 000 001 000000   ;R0 = Character stored in R1
+1111 0000 0010 0001   ;TRAP x21 OUT write character in R0[7:0] to console display
+0001 001 001 1 00001  ;R1 + 1
+0001 010 010 1 11111  ;R2 - 1
+0000 011 1111 11011   ;Branch to next character in text until exhausted
+0000 100 00000 0011   ;After printing this text, branch forward 3 lines
+0000 0000 0010 0000   ;<space>
+0000 0000 0011 1101   ;=
+0000 0000 0010 0000   ;<space>
 
                       ;Prints out the result & resets stack
 1110 011 1111 11010   ;R3 = The line below the stack
@@ -116,11 +122,11 @@
 1111 0000 0010 0001   ;TRAP x21 OUT write character in R0[7:0] to console display
 0001 100 100 1 11111  ;R4 - 1
 0000 011 1111 10100   ;Branch to next number in stack until the stack is exhausted
-1110 000 1110 10101   ;Load top of stack into R0
+1110 000 1110 01110   ;Load top of stack into R0
 0101 001 001 1 00000  ;R1 = 0
 0001 001 001 1 00001  ;R1 = R1 + 1
 0111 001 000 000000   ;Store R0 in R1 Address
 
-1110 000 1100 10111   ;Load x3000 into R0
+1110 000 1100 10000   ;Load x3000 into R0
 1100 000 000 000000   ;JMP to R0[address]
 1111 0000 0010 0101   ;TRAP x25 HALT
