@@ -39,26 +39,27 @@
 0101 001 001 1 00000  ;R1 = 0
 
                       ;Calculate 2^n
-1110 101 0000 10011   ;R5 = Top of Stack pointer
 0001 000 000 1 11111  ;R0 = R0 - 1
-0000 100 0001 00001   ;Branch ahead of Stack if R0 < 0 (Counter is exhausted)
+0000 100 0001 00010   ;Branch ahead of Stack if R0 < 0 (Counter is exhausted)
+0001 100 100 1 10000  ;R4 = -16
 1110 001 0000 10000   ;R1 = Bottom of Stack pointer
 0110 010 001 000000   ;R2 = Number stored in Stack pointer
 0001 010 010 000 010  ;2 * R2
 0001 010 010 000 011  ;R2 = R2 + R3
-0000 010 1111 11001   ;BRz Branch back to counter
 0001 011 010 1 00000  ;R3 = R2
 0001 011 011 1 10110  ;R3 - 10
-0000 100 0000 00100   ;Branch ahead 4 lines if R3 < 0
+0000 100 0000 00011   ;Branch ahead 3 lines if R3 < 0
 0001 010 010 1 10110  ;R2 - 10
 0101 011 011 1 00000  ;R3 = 0
 0001 011 011 1 00001  ;R3 = 1
-0001 101 101 1 00001  ;R5 = R5 + 1
 0000 011 0000 00001   ;Branch ahead 1 lines if R3 >= 0
 0101 011 011 1 00000  ;R3 = 0
 0111 010 001 000000   ;Store R2 in R1 Address
 0001 001 001 1 00001  ;R1 = R1 + 1
-0000 111 1111 10000   ;Always branch back to start of this block
+0001 100 100 1 00001  ;R4 += 1
+0000 100 1111 10001   ;Branch N (if the R4 counter is still negative, jump up 14 lines)
+0000 011 1111 01100   ;Branch ZP (if the whole stack has been doubled, jump up 18 lines)
+
 
 0000000000000001      ;This is the stack for counting numbers
 0000000000000000      ;Starts at 1 because (2^n, n=0) = 1
@@ -83,6 +84,7 @@
 0001 100 100 1 01111  ;R4 = R4 + 15
 0001 011 011 1 11111  ;R3 - 1
 0110 010 011 000000   ;R2 = Number stored in R3 (Top of Stack)
+
 0101 000 000 1 00000  ;R0 = 0
 0001 000 010 1 00000  ;R0 = R2
 0001 000 000 1 01111  ;R0 = R0 + 15
@@ -93,7 +95,7 @@
 0001 100 100 1 11111  ;R4 - 1
 0000 011 1111 10101   ;Branch to next number in stack until the stack is exhausted
 
-
+1111 0000 0010 0101   ;TRAP x25 HALT
 
 
 
