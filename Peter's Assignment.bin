@@ -60,7 +60,6 @@
 0000 100 1111 10001   ;Branch N (if the R4 counter is still negative, jump up 14 lines)
 0000 011 1111 01100   ;Branch ZP (if the whole stack has been doubled, jump up 18 lines)
 
-
 0000000000000001      ;This is the stack for counting numbers
 0000000000000000      ;Starts at 1 because (2^n, n=0) = 1
 0000000000000000
@@ -78,7 +77,7 @@
 0000000000000000
 0000000000000000
 
-                      ;Prints out the result
+                      ;Prints out the result & resets stack
 1110 011 1111 11111   ;R3 = This line
 0101 100 100 1 00000  ;R4 = 0
 0001 100 100 1 01111  ;R4 = R4 + 15
@@ -100,10 +99,14 @@
 1111 0000 0010 0001   ;TRAP x21 OUT write character in R0[7:0] to console display
 0001 100 100 1 11111  ;R4 - 1
 0000 011 1111 10100   ;Branch to next number in stack until the stack is exhausted
+1110 000 1110 11010   ;Load x302D into R0
+0101 001 001 1 00000  ;R1 = 0
+0001 001 001 1 00001  ;R1 = R1 + 1
+0111 001 000 000000   ;Store R0 in R1 Address
 
-1111 0000 0010 0101   ;TRAP x25 HALT
-1110 000 1101 01101   ;Load x3000 into R0
+1110 000 1101 01001   ;Load x3000 into R0
 1100 000 000 000000   ;JMP to R0[address]
+1111 0000 0010 0101   ;TRAP x25 HALT
 
 0000000000000000
 0000000000000000
