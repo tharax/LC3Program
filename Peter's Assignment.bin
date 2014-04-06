@@ -1,51 +1,10 @@
 ;@TODO
 ;Sanitize input - Number between 01-50, keep running
 ;               - Single digit number, keep running
-;               - 51, Quit
+;               - 51, HALT
 ;               - Other input - Bad input message, run again
-;Text formatting
 
 0011 0000 0000 0000   ;Start at x3000
-
-1110 000 00000 0010   ;LEA 2 below this line
-1111 0000 0010 0100   ;TRAP x24 PUTSP prints out this text block
-0000 111 00010 0011   ;After printing this text, branch forward 35 lines
-
-0100 0001 0100 1110   ;NA
-0100 0101 0100 1101   ;ME
-0010 0000 0011 1010   ;:<space>
-0110 0101 0101 0000   ;Pe
-0110 0101 0111 0100   ;te
-0010 0000 0111 0010   ;r<space>
-0110 1111 0101 0010   ;Ro
-0111 0011 0111 0011   ;ss
-0111 0010 0110 0101   ;er
-0000 1101 0000 1101   ;<newline>
-0110 1111 0101 0100   ;To
-0111 0001 0010 0000   ;<space>q
-0110 1001 0111 0101   ;ui
-0010 0000 0111 0100   ;t<space>
-0111 0100 0110 0001   ;at
-0110 0001 0010 0000   ;<space>a
-0111 1001 0110 1110   ;ny
-0111 0100 0010 0000   ;<space>t
-0110 1101 0110 1001   ;im
-0010 1100 0110 0101   ;e,
-0110 0101 0010 0000   ;<space>e
-0111 0100 0110 1110   ;nt
-0111 0010 0110 0101   ;er
-0010 0010 0010 0000   ;<space>"
-0011 0101 0010 0000   ;<space>5
-0010 0000 0011 0001   ;1<space>
-0010 0000 0010 0010   ;"<space>
-0111 0100 0110 0001   ;at
-0111 0100 0010 0000   ;<space>t
-0110 0101 0110 1000   ;he
-0111 0000 0010 0000   ;<space>p
-0110 1111 0111 0010   ;ro
-0111 0000 0110 1101   ;mp
-0010 1110 0111 0100   ;t.
-0000 0000 0000 0000
 
 0101 000 000 1 00000  ;Clear all 8 registers so that repeated prompts don't carry over errors.
 0101 001 001 1 00000
@@ -56,11 +15,19 @@
 0101 110 110 1 00000
 0101 111 111 1 00000
 
-1110 000 00000 0010   ;LEA 2 below this line
-1111 0000 0010 0100   ;TRAP x24 PUTSP prints out this text block
-0000 111 00000 0010   ;After printing this text, branch forward 2 lines
-0010 0000 0011 0010   ;2^
-0000 0011 0101 1110   ;
+
+0001 010 010 1 00011  ;R2 = 3
+1110 001 00000 0110   ;LEA R1 3 below this line
+0110 000 001 000000   ;R0 = Character stored in R1
+1111 0000 0010 0001   ;TRAP x21 OUT write character in R0[7:0] to console display
+0001 001 001 1 00001  ;R1 + 1
+0001 010 010 1 11111  ;R2 - 1
+0000 011 1111 11011   ;Branch to next character in text until exhausted
+0000 100 00000 0100   ;After printing this text, branch forward 4 lines
+0000 0000 0011 0010   ;2
+0000 0000 0010 0000   ;<space>
+0000 0000 0101 1110   ;^
+0000 0000 0010 0000   ;<space>
 
                       ;Take input n, and store in R0
 1111 0000 0010 0000   ;TRAP x20 GETC takes one character from the keyboard
@@ -68,6 +35,7 @@
 0001 000 000 1 10000  ;R0 = R0 - 16
 0001 000 000 1 10000  ;R0 = R0 - 16
 0001 000 000 1 10000  ;R0 = R0 - 16
+0101 001 001 1 00000  ;R1 = 0
 0001 001 001 000 000  ;R1 = R1 + R0
 0001 001 001 000 001  ;2 * R1
 0001 001 001 000 001  ;2 * R1
@@ -120,8 +88,14 @@
 0000000000000000
 0000000000000000
 
+1110 000 00000 0010   ;LEA 2 below this line
+1111 0000 0010 0100   ;TRAP x24 PUTSP prints out this text block
+0000 111 00000 0010   ;After printing this text, branch forward 2 lines
+0011 1101 0010 0000   ;<space>=
+0000 0000 0000 0000
+
                       ;Prints out the result & resets stack
-1110 011 1111 11111   ;R3 = This line
+1110 011 1111 11010   ;R3 = The line below the stack
 0101 100 100 1 00000  ;R4 = 0
 0001 100 100 1 01111  ;R4 = R4 + 15
 0001 100 100 1 00001  ;R4 = R4 + 1
@@ -142,11 +116,11 @@
 1111 0000 0010 0001   ;TRAP x21 OUT write character in R0[7:0] to console display
 0001 100 100 1 11111  ;R4 - 1
 0000 011 1111 10100   ;Branch to next number in stack until the stack is exhausted
-1110 000 1110 11010   ;Load x302D into R0
+1110 000 1110 10101   ;Load top of stack into R0
 0101 001 001 1 00000  ;R1 = 0
 0001 001 001 1 00001  ;R1 = R1 + 1
 0111 001 000 000000   ;Store R0 in R1 Address
 
-1110 000 1101 00100   ;Load x3000 into R0
+1110 000 1100 10111   ;Load x3000 into R0
 1100 000 000 000000   ;JMP to R0[address]
 1111 0000 0010 0101   ;TRAP x25 HALT
