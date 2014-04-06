@@ -19,7 +19,7 @@
 0101 110 110 1 00000
 0101 111 111 1 00000
 
-                      ;Take input, and store in R0
+                      ;Take input n, and store in R0
 1111 0000 0010 0000   ;TRAP x20 GETC takes one character from the keyboard
 1111 0000 0010 0001   ;TRAP x21 OUT write character in R0[7:0] to console display
 0001 000 000 1 10000  ;R0 = R0 - 16
@@ -78,7 +78,7 @@
 0000000000000000
 0000000000000000
 
-                      ;Prints out the stack
+                      ;Prints out the result
 1110 011 1111 11111   ;R3 = This line
 0101 100 100 1 00000  ;R4 = 0
 0001 100 100 1 01111  ;R4 = R4 + 15
@@ -91,6 +91,7 @@
 0001 011 011 1 11111  ;R3 - 1
 0110 010 011 000000   ;R2 = Number stored in R3 (Top of Stack)
 0101 000 000 1 00000  ;R0 = 0
+0111 000 011 000000   ;Store R0 in R3 Address
 0001 000 010 1 00000  ;R0 = R2
 0001 000 000 1 01111  ;R0 = R0 + 15
 0001 000 000 1 01111  ;R0 = R0 + 15
@@ -98,16 +99,18 @@
 0001 000 000 1 00011  ;R0 = R0 + 3
 1111 0000 0010 0001   ;TRAP x21 OUT write character in R0[7:0] to console display
 0001 100 100 1 11111  ;R4 - 1
-0000 011 1111 10101   ;Branch to next number in stack until the stack is exhausted
+0000 011 1111 10100   ;Branch to next number in stack until the stack is exhausted
 
 1111 0000 0010 0101   ;TRAP x25 HALT
+1110 000 1101 01101   ;Load x3000 into R0
+1100 000 000 000000   ;JMP to R0[address]
 
-
-
-
-
-
-
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
 
 
 
