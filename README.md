@@ -1,5 +1,4 @@
 # LC3Program #
----
 
 ## How to run ##
 
