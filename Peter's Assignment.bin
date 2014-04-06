@@ -7,6 +7,46 @@
 
 0011 0000 0000 0000   ;Start at x3000
 
+1110 000 00000 0010   ;LEA 2 below this line
+1111 0000 0010 0100   ;TRAP x24 PUTSP prints out this text block
+0000 111 00010 0011   ;After printing this text, branch forward 35 lines
+
+0100 0001 0100 1110   ;NA
+0100 0101 0100 1101   ;ME
+0010 0000 0011 1010   ;:<space>
+0110 0101 0101 0000   ;Pe
+0110 0101 0111 0100   ;te
+0010 0000 0111 0010   ;r<space>
+0110 1111 0101 0010   ;Ro
+0111 0011 0111 0011   ;ss
+0111 0010 0110 0101   ;er
+0000 1101 0000 1101   ;<newline>
+0110 1111 0101 0100   ;To
+0111 0001 0010 0000   ;<space>q
+0110 1001 0111 0101   ;ui
+0010 0000 0111 0100   ;t<space>
+0111 0100 0110 0001   ;at
+0110 0001 0010 0000   ;<space>a
+0111 1001 0110 1110   ;ny
+0111 0100 0010 0000   ;<space>t
+0110 1101 0110 1001   ;im
+0010 1100 0110 0101   ;e,
+0110 0101 0010 0000   ;<space>e
+0111 0100 0110 1110   ;nt
+0111 0010 0110 0101   ;er
+0010 0010 0010 0000   ;<space>"
+0011 0101 0010 0000   ;<space>5
+0010 0000 0011 0001   ;1<space>
+0010 0000 0010 0010   ;"<space>
+0111 0100 0110 0001   ;at
+0111 0100 0010 0000   ;<space>t
+0110 0101 0110 1000   ;he
+0111 0000 0010 0000   ;<space>p
+0110 1111 0111 0010   ;ro
+0111 0000 0110 1101   ;mp
+0010 1110 0111 0100   ;t.
+0000 0000 0000 0000
+
 0101 000 000 1 00000  ;Clear all 8 registers so that repeated prompts don't carry over errors.
 0101 001 001 1 00000
 0101 010 010 1 00000
@@ -16,13 +56,11 @@
 0101 110 110 1 00000
 0101 111 111 1 00000
 
-1110 000 00000 0010     ;LEA 2 below this line
-1111 0000 0010 0100     ;TRAP x24 PUTSP prints out this text block
-0000 111 00000 0010     ;After printing this text, Branch forward 2 lines
-0101 1110 0011 0010     ;2^
-0000 0000 0000 0000     ;
-
-
+1110 000 00000 0010   ;LEA 2 below this line
+1111 0000 0010 0100   ;TRAP x24 PUTSP prints out this text block
+0000 111 00000 0010   ;After printing this text, branch forward 2 lines
+0010 0000 0011 0010   ;2^
+0000 0011 0101 1110   ;
 
                       ;Take input n, and store in R0
 1111 0000 0010 0000   ;TRAP x20 GETC takes one character from the keyboard
@@ -109,201 +147,6 @@
 0001 001 001 1 00001  ;R1 = R1 + 1
 0111 001 000 000000   ;Store R0 in R1 Address
 
-1110 000 1101 01001   ;Load x3000 into R0
+1110 000 1101 00100   ;Load x3000 into R0
 1100 000 000 000000   ;JMP to R0[address]
 1111 0000 0010 0101   ;TRAP x25 HALT
-
-
-
-
-
-
-
-
-
-
-
-
-
-1110 000 00000 0010     ;LEA R0 2, to the bad input text block.
-1111 0000 0010 0100     ;TRAP x24 prints out the bad input text block.
-0000 111 00001 0100     ;Unconditionally branch 20 lines ahead.
-
-                        ;Bad input, please try again.
-0110 0001 0100 0010     ;Ba
-0010 0000 0110 0100     ;d<space>
-0110 1110 0110 1001     ;in
-0111 0101 0111 0000     ;pu
-0010 1100 0111 0100     ;t<,>
-0111 0000 0010 0000     ;<space>p
-0110 0101 0110 1100     ;le
-0111 0011 0110 0001     ;as
-0010 0000 0110 0101     ;e<space>
-0111 0010 0111 0100     ;tr
-0010 0000 0111 1001     ;y<space>
-0110 0111 0110 0001     ;ag
-0110 1001 0110 0001     ;ai
-0010 1110 0110 1110     ;n<.>
-0000 0000 0000 1010     ;newline
-0000 0000 0000 0000
-
-                        ;To quit at any time, enter " 51 " at the prompt.
-0110 1111 0101 0100     ;To
-0111 0001 0010 0000     ;<space>q
-0110 1001 0111 0101     ;ui
-0010 0000 0111 0100     ;t<space>
-0111 0100 0110 0001     ;at
-0110 0001 0010 0000     ;<space>a
-0111 1001 0110 1110     ;ny
-0111 0100 0010 0000     ;<space>t
-0110 1101 0110 1001     ;im
-0010 1100 0110 0101     ;e,
-0110 0101 0010 0000     ;<space>e
-0111 0100 0110 1110     ;nt
-0111 0010 0110 0101     ;er
-0010 0010 0010 0000     ;<space>"
-0011 0101 0010 0000     ;<space>5
-0010 0000 0011 0001     ;1<space>
-0010 0000 0010 0010     ;"<space>
-0111 0100 0110 0001     ;at
-0111 0100 0010 0000     ;<space>t
-0110 0101 0110 1000     ;he
-0111 0000 0010 0000     ;<space>p
-0110 1111 0111 0010     ;ro
-0111 0000 0110 1101     ;mp
-0010 1110 0111 0100     ;t.
-0000 0000 0000 1101     ;<newline>
-0000 0000 0000 0000
-
-
-0111 000 110 000000           ;store the character at r0 into r6[address]
-0001 000 000 1 10111    ;subtract 9 from r0 (check if it is a whitespace - tab)
-0000 010 0000 00001           ;branch to end (its a tab)
-0001 000 000 1 11111    ;subtract 10 from r0 (check if it is a whitespace - line feed)
-0000 010 0000 00010           ;branch to end (its a linefeed)
-0001 000 000 1 10110    ;subtract 10 from r0
-0001 000 000 1 10100    ;subtract 12 from r0 (check if it is a whitespace - space)
-0000 010 0000 00011           ;branch to end (its a space)
-0001 010 010 1 00001    ;add 1 to counter in r2 (input length counter)
-0001 110 110 1 00001    ;add 1 to r6[address] counter
-0000 111 1111 10011           ;branch NZP back up to line 13 above this
-;1111 0000 0010 0101    ;halt <-------------- SHOULD BE BRANCH TO "BAD INPUT"---------CHANGE ME
-
-                              ;check to see if the input is too long or no input.
-0101 011 011 1 00000    ;wipe register 3
-0001 010 010 1 11110    ;subtract 2 from r2 (input length counter)
-0000 001 1101 11000           ;branch back 47 to BAD INPUT                    ;x304F
-0001 010 010 1 00010    ;add 2 back to the r2 counter.
-0000 010 1111 11101           ;branch back 2 and hitch a ride to BAD INPUT
-0001 010 010 1 11111    ;check to see if the input is 1 (by subtracting one and
-                              ; branching if it is zero)
-0000 010 0000 00001           ;branch to loading r3 with x30
-0000 001 0000 00100           ;if the answer is still positive, branch down two
-0001 011 011 1 01111    ; 
-0001 011 011 1 01111    ;
-0001 011 011 1 01111    ;
-0001 011 011 1 00011    ;add x30 to r3
-0001 010 010 1 00001    ;add 1 back to the r2 counter
-
-0101 100 100 1 00000    ;wipe register 4
-
-1110 110 1011 00110           ;Load into r6 the start of the stack address
-0001 110 110 1 00001    ;add 1 to r6
-0110 000 110 000000           ;load r6[contents] into r0
-0101 111 111 1 00000    ;wipe r7
-0111 111 110 000000           ;store r7 in r6 address (to wipe the stack for repeat uses)
-
-0001 010 010 1 11111    ;decrease counter in r2 by 1
-0000 100 0000 00001           ;branch Nzp <-this line should never be run
-0000 010 0000 00001           ;branch nZp forward 2 if it's zero
-0001 011 000 1 00000    ;add to r3 the number in r0
-0001 100 000 1 00000    ;add to r4 the number in r0
-0001 001 001 1 11111    ;decrease counter in r1 by 1
-0000 001 11111 0101           ;branch nzP back 2 if the result is still positive
-0001 101 100 1 00000    ;add to r5 what is in r4
-0001 101 101 1 10000    ;subtract 16 from r5
-0001 101 101 1 10000    ;subtract 16 from r5
-0001 101 101 1 10000    ;subtract 16 from r5
-0001 101 101 1 11111    ;subtract 1 from r5
-0000 101 0000 00111           ;if result is negative or positive, branch past this "51" check
-0001 101 011 1 00000    ;add to r5 what is in r3
-0001 101 101 1 10000    ;subtract 16 from r5
-0001 101 101 1 10000    ;subtract 16 from r5
-0001 101 101 1 10000    ;subtract 16 from r5
-0001 101 101 1 11011    ;subtract 5 from r5
-0000 101 0000 00001           ;if result is negative or positive, branch past this "51" check
-1111 0000 0010 0101           ;halt
-
-0000 111 00100 0100     ;branch NZP to the end of the two text blocks below.
-
-                        ;NAME: Peter Rosser
-0100 0001 0100 1110     ;NA
-0100 0101 0100 1101     ;ME
-0010 0000 0011 1010     ;:<space>
-0110 0101 0101 0000     ;Pe
-0110 0101 0111 0100     ;te
-0010 0000 0111 0010     ;r<space>
-0110 1111 0101 0010     ;Ro
-0111 0011 0111 0011     ;ss
-0111 0010 0110 0101     ;er
-
-                        ;Please enter an integer between 1 and 50: 
-0110 1100 0101 0000     ;Pl
-0110 0001 0110 0101     ;ea
-0110 0101 0111 0011     ;se
-0110 0101 0010 0000     ;<space>e
-0111 0100 0110 1110     ;nt
-0111 0010 0110 0101     ;er
-0110 0001 0010 0000     ;<space>a
-0010 0000 0110 1110     ;n<space>
-0110 1110 0110 1001     ;in
-0110 0101 0111 0100     ;te
-0110 0101 0110 0111     ;ge
-0010 0000 0111 0010     ;r<space>
-0110 0101 0110 0010     ;be
-0111 0111 0111 0100     ;tw
-0110 0101 0110 0101     ;ee
-0010 0000 0110 1110     ;n<space>
-0010 0000 0011 0001     ;1<space>
-0110 1110 0110 0001     ;an
-0010 0000 0110 0100     ;d<space>
-0011 0000 0011 0101     ;50
-0010 0000 0011 1010     ;:<space>
-0000 0000 0000 0000     ;
-
-1110 000 00000 0010     ;LEA 2 down from this line
-1111 0000 0010 0100     ;TRAP x24 (PUTSP) - prints out the Result part a text block
-0000 111 00000 0110     ;after trap, branch forward 6 lines
-
-                        ;2^<-------------Start of "Result(a)"
-0101 1110 0011 0010     ;2^
-0000 0000 0000 0000     ;<---------------end of "Result(a)"
-
-                        ; =<-------------Start of "Result(b)"
-0011 1101 0010 0000     ;<space>=
-0000 0000 0000 0000     ;<---------------end of "Result(b)"
-
-                        ;test to check that second ASCII character is a number
-0001 100 100 1 10000    ;subtract xF(16) from number in r4, store in r4
-0001 100 100 1 10000    ;subtract xF(16) from number in r4, store in r4
-0001 100 100 1 10000    ;subtract xF(16) from number in r4, store in r4
-0001 100 100 1 10000    ;subtract xF(16) from number in r4, store in r4
-0000 011 0000 00011     ;if the result is zero or positive, branch forward 3 lines
-0001 100 100 1 01010    ;add xA(10) to number in r4, store in r4
-0001 100 100 1 00110    ;add x6(6) to number in r4, store in r4
-0000 100 0000 01010     ;if the result is negative, branch forward 1 lines
-
-0000 111 0000 00000     ;the second character is not a number! branch to BAD INPUT
-
-                        ;test to check that first ASCII character is a number
-0001 011 011 1 10000    ;subtract xF(16) from number in r3, store in r3
-0001 011 011 1 10000    ;subtract xF(16) from number in r3, store in r3
-0001 011 011 1 10000    ;subtract xF(16) from number in r3, store in r3
-0001 011 011 1 10000    ;subtract xF(16) from number in r3, store in r3
-0000 011 0000 00100     ;if the result is zero or positive, branch forward 4 lines
-0001 011 011 1 01010    ;add xA(10) to number in r3, store in r3
-0001 011 011 1 00110    ;add x6(6) to number in r3, store in r3
-0000 100 0000 00001     ;if the result is negative, branch forward 1 lines
-0000 111 0000 00010     ;if the result is anything, branch forward 1 lines
-1110 000 1001 01011     ;should load back 210 places, to BAD INPUT
-1100 000 000 000000     ;jump to r0[address], BAD INPUT
